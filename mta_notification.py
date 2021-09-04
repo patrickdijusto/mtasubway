@@ -3,6 +3,10 @@ import requests
 import time # imports module for Epoch/GMT time conversion
 import os # imports package for dotenv
 import settings
+import sys
+
+assert sys.version_info >= (3, 0)
+
 
 #from dotenv import load_dotenv, find_dotenv # imports module for dotenv
 #load_dotenv(find_dotenv()) # loads .env from root directory
@@ -11,20 +15,49 @@ import settings
 # and dotenv installed from pypi. Get API key from http://datamine.mta.info/user
 
 
-API_KEY="6d8b5a1c30d0d0b6666d16cd7736df84"
+#API_KEY="6d8b5a1c30d0d0b6666d16cd7736df84"
 
 
-api_key = API_KEY
+api_key = "p2XkJ06hcy1ImnGQcW8ie293U418COFo1BiTlDxS"
+
+
+# class TokenAuth(AuthBase):
+    # def __init__(self, token):
+        # self.token = token
+
+    # def __call__(self, r):
+        # """Attach an API token to a custom auth header."""
+        # r.headers['x-api-key'] = f'{self.token}'  # Python 3.6+
+        # return r
+
+
+url = 'https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-bdfm'
+API_KEY = api_key
+
+#response = requests.get(url, auth=TokenAuth(API_KEY))
+response = requests.get(url, headers={"X-API-KEY": API_KEY})
+
+print(response)
+
+
+
 
 # Requests subway status data feed from City of New York MTA API
 feed = gtfs_realtime_pb2.FeedMessage()
-response = requests.get('http://datamine.mta.info/mta_esi.php?key={}&feed_id=21'.format(api_key))
+#response = requests.get('http://datamine.mta.info/mta_esi.php?key={}&feed_id=21'.format(api_key))
 feed.ParseFromString(response.content)
 
 # The MTA data feed uses the General Transit Feed Specification (GTFS) which
 # is based upon Google's "protocol buffer" data format. While possible to
 # manipulate this data natively in python, it is far easier to use the
 # "pip install --upgrade gtfs-realtime-bindings" library which can be found on pypi
+
+
+
+
+
+
+
 
 from protobuf_to_dict import protobuf_to_dict
 
@@ -81,13 +114,13 @@ print("\n\n\n")
 ##if time_until_train > 10:
 
 time_until_next_train = int(((second_arrival_time - current_time) / 60))
-print("It is currently" + time.strftime("%I:%M %p"))
+print("It is currently " + time.strftime("%I:%M %p"))
 print("The next Manhattan-bound F train from Fort Hamilton Station arrives in "+str(time_until_train) +" minutes at " + time.strftime("%I:%M %p", time.localtime(nearest_arrival_time)))
 
 print("\nThe next one after that arrives in "+ str(time_until_next_train) + " minutes at " + time.strftime("%I:%M %p", time.localtime(second_arrival_time)))
 
 
-# These are useful print statments used for script debugging, commented out
+# These are useful print statements used for script debugging, commented out
 #
 # for times in collected_times:
      # print(times, "=", time.strftime("%I:%M %p", time.localtime(times)))
@@ -131,8 +164,21 @@ print("\nThe next one after that arrives in "+ str(time_until_next_train) +" min
 ### G TRAIN
 
 feed = gtfs_realtime_pb2.FeedMessage()
-response = requests.get('http://datamine.mta.info/mta_esi.php?key={}&feed_id=31'.format(api_key))
+
 feed.ParseFromString(response.content)
+
+
+url = 'https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-g'
+API_KEY = api_key
+
+#response = requests.get(url, auth=TokenAuth(API_KEY))
+response = requests.get(url, headers={"X-API-KEY": API_KEY})
+
+print(response)
+
+feed.ParseFromString(response.content)
+
+
 
 # The MTA data feed uses the General Transit Feed Specification (GTFS) which
 # is based upon Google's "protocol buffer" data format. While possible to

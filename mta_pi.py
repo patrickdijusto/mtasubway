@@ -2,7 +2,6 @@ from google.transit import gtfs_realtime_pb2
 import requests
 import time # imports module for Epoch/GMT time conversion
 import os # imports package for dotenv
-import settings
 
 #from dotenv import load_dotenv, find_dotenv # imports module for dotenv
 #load_dotenv(find_dotenv()) # loads .env from root directory
@@ -86,7 +85,7 @@ print("\nF TRAIN\nN "+time.strftime("%I:%M %p", time.localtime(nearest_arrival_t
 
 collected_times = []
 station_time_lookup(realtime_data, 'F25S')
-collected_times.sort()
+collected_times.sort()tfs
 nearest_arrival_time = collected_times[0]
 second_arrival_time = collected_times[1]
 
